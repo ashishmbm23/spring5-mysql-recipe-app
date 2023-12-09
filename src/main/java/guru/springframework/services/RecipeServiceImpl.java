@@ -7,6 +7,7 @@ import guru.springframework.domain.Recipe;
 import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,8 @@ public class RecipeServiceImpl implements RecipeService {
         log.debug("I'm in the service");
 
         Set<Recipe> recipeSet = new HashSet<>();
-        recipeRepository.findAll().iterator().forEachRemaining(recipeSet::add);
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        recipeRepository.findAll(sort).iterator().forEachRemaining(recipeSet::add);
         return recipeSet;
     }
 

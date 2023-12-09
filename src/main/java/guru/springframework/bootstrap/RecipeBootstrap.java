@@ -35,8 +35,19 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        recipeRepository.saveAll(getRecipes());
+        if( !checkIfDataIsAlreadyThere() ){
+            recipeRepository.saveAll(getRecipes());
+        }
         log.debug("Loading Bootstrap Data");
+    }
+
+    private boolean checkIfDataIsAlreadyThere(){
+        Iterable<Recipe> recipes = recipeRepository.findAll();
+        long numberOfRecords = recipeRepository.count();
+        if( numberOfRecords > 0 ){
+            return true;
+        }
+        return false;
     }
 
     private List<Recipe> getRecipes() {
